@@ -18,12 +18,13 @@ long timeLapse = 1000;
 // the setup routine runs once when you press reset:
 void setup() {     
   pinMode(shootIndicator, OUTPUT);
-  digitalWrite(13, LOW);  //shotch it off initially
+  digitalWrite(shootIndicator, LOW);  //shotch it off initially
   // initialize the digital pin as an output.
   pinMode(toggleInputButton, INPUT); 
   pinMode(inputButton, INPUT);  
   pinMode(enter, INPUT);  
-  pinMode(shootButton, OUTPUT);  
+  pinMode(shootButton, OUTPUT); 
+  digitalWrite(shootButton, LOW); //initially not pressed
   
   Serial.begin(9600);  //debug
 }
@@ -84,7 +85,8 @@ void takeAwesomeTimeLapse(){
    }
    //Release the button
    digitalWrite(shootButton,LOW);
-  if(!delayForNextInstruction(timeLapse)){
+   //Delay for timeLapse time and then repeat
+   if(!delayForNextInstruction(timeLapse)){
      return;
    }
   }
@@ -96,6 +98,7 @@ boolean delayForNextInstruction(long delayDuration){
   while((unsigned long)(currentTime-startTime) < delayDuration){
     if(digitalRead(enter)==HIGH){
       Serial.println("Enter button pressed, aborting!!");
+      digitalWrite(shootButton,LOW); //close the exposure
      return false;
    }
     currentTime = millis();
