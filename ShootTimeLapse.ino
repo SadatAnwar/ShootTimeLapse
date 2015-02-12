@@ -79,12 +79,14 @@ void takeAwesomeTimeLapse(){
   //loop till the enter button is pressed
   while(true){
     //Press the button
-   digitalWrite(shootButton, HIGH);
+   digitalWrite(shootButton, HIGH);//Open shutter
+   digitalWrite(shootIndicator, HIGH); // indicate the shutter is now open
    if(!delayForNextInstruction(exposure)){
      return;
    }
    //Release the button
-   digitalWrite(shootButton,LOW);
+   digitalWrite(shootButton,LOW); //Close shutter
+   digitalWrite(shootIndicator,LOW); //turn off indicator
    //Delay for timeLapse time and then repeat
    if(!delayForNextInstruction(timeLapse)){
      return;
@@ -99,6 +101,7 @@ boolean delayForNextInstruction(long delayDuration){
     if(digitalRead(enter)==HIGH){
       Serial.println("Enter button pressed, aborting!!");
       digitalWrite(shootButton,LOW); //close the exposure
+      digitalWrite(shootIndicator,LOW); // switch off indicator
      return false;
    }
     currentTime = millis();
